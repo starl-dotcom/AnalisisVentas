@@ -43,12 +43,12 @@ namespace AnalisisVentas.Load
                 var validCustomers = transformer.TransformCustomers(rawCustomers).ToList();
                 var uniqueCategories = transformer.ExtractUniqueCategories(rawProducts).ToList();
                 var validOrders    = transformer.TransformOrders(rawOrders, validCustomers).ToList();
-
-
-                var validOrderDetails = transformer.TransformOrderDetails(rawOrderDetails, validOrders, rawProducts).ToList();
+                var validProducts = transformer.TransformProducts(rawProducts).ToList();
+                var validOrderDetails = transformer.TransformOrderDetails(rawOrderDetails, validOrders, validProducts).ToList();
 
                 Console.WriteLine($"\n  Customers válidos:    {validCustomers.Count} | Rechazados: {rawCustomers.Count - validCustomers.Count}");
                 Console.WriteLine($"  Categorías únicas:    {uniqueCategories.Count}");
+                Console.WriteLine($"  Productos válidos:    {validProducts.Count} | Rechazados: {rawProducts.Count - validProducts.Count}");
                 Console.WriteLine($"  Orders válidas:       {validOrders.Count} | Rechazadas: {rawOrders.Count - validOrders.Count}");
                 Console.WriteLine($"  Details válidos:      {validOrderDetails.Count} | Rechazados: {rawOrderDetails.Count - validOrderDetails.Count}");
 
@@ -67,7 +67,6 @@ namespace AnalisisVentas.Load
                 Console.WriteLine($"  Categorías cargadas: {categoryMap.Count}");
 
                 // Productos 
-                var validProducts = transformer.TransformProducts(rawProducts, categoryMap).ToList();
                 await loader.LoadProductsAsync(validProducts, categoryMap);
                 Console.WriteLine($"  Productos cargados:  {validProducts.Count}");
 

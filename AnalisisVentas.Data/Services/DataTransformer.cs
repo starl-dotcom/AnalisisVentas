@@ -23,16 +23,16 @@ namespace AnalisisVentas.Data.Services
                 .Distinct();
         }
 
-        public IEnumerable<Product> TransformProducts(IEnumerable<Product> rawData, Dictionary<string, int> categoryMap)
+        public IEnumerable<Product> TransformProducts(IEnumerable<Product> rawData)
         {
             return rawData
                 .Where(p => p.ProductID > 0
                     && !string.IsNullOrWhiteSpace(p.ProductName)
                     && p.Price >= 0
-                    && p.Stock >= 0)
+                    && p.Stock >= 0
+                    && !string.IsNullOrWhiteSpace(p.Category))
                 .GroupBy(p => p.ProductID)
-                .Select(g => g.First())
-                .Where(p => !string.IsNullOrWhiteSpace(p.Category) && categoryMap.ContainsKey(p.Category!));
+                .Select(g => g.First());
         }
 
         public IEnumerable<Order> TransformOrders(IEnumerable<Order> rawData, IEnumerable<Customer> validCustomers)
